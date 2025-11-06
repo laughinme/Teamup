@@ -13,10 +13,8 @@ from core.rbac import (
 )
 from database.redis import CacheRepo, get_redis
 from database.relational_db import User
-from domain.auth import SystemPermission, SystemRole
 from service.auth import TokenService, get_token_service
 from service.users import UserService, get_user_service
-from service.organizations import OrganizationService, get_organization_service
 
 security = HTTPBearer(
     description="Access token must be passed as Bearer to authorize request"
@@ -105,21 +103,20 @@ def expand_roles(roles: list[str], implications: dict[str, set[str]]) -> set[str
     
     return effective_roles
 
-
 def require(
     *roles: str,
-    scope: Literal["global", "org"] = "global",
-    org_kw: str = "org_id",
+    scope: Literal["global", "team"] = "global",
+    tenant_kw: str = "team_id",
     bypass_global: frozenset[str] = frozenset({"admin"}),
     bypass_team: frozenset[str] = frozenset({"owner"}),
 ):
+    """A handy universal multi-scope role checker."""
     expected = set(roles)
 
     async def dependency(
         request: Request,
         payload: Annotated[dict[str, int | str], Depends(parse_token)],
         user: Annotated[User, Depends(auth_user)],
-        org_svc: Annotated[OrganizationService, Depends(get_organization_service)],
     ) -> None:
         
         verify_auth_version(payload.get("av"), user)
@@ -135,24 +132,28 @@ def require(
                 raise HTTPException(status.HTTP_403_FORBIDDEN, detail="You don't have permission to do this")
             return
         
-        elif scope == "org":
-            org_id = request.path_params.get(org_kw) or request.query_params.get(org_kw)
-            if org_id is None:
+        elif scope == "team":
+            team_id = request.path_params.get(tenant_kw) or request.query_params.get(tenant_kw)
+            if team_id is None:
                 raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Organization ID is required")
             
-            user_org_role = await org_svc.get_membership_role(org_id, user.id)
-            if user_org_role is None:
+            if user.team_role is None:
                 raise HTTPException(status.HTTP_403_FORBIDDEN, detail="You don't have permission to do this")
             
-            org_roles = expand_roles([user_org_role.value], TEAM_ROLE_IMPLICATIONS)
-            if org_roles & bypass_team:
+            team_roles = expand_roles([user.team_role.value], TEAM_ROLE_IMPLICATIONS)
+            if team_roles & bypass_team:
                 return
             
-            if not expected.issubset(org_roles):
+            if not expected.issubset(team_roles):
                 raise HTTPException(status.HTTP_403_FORBIDDEN, detail="You don't have permission to do this")
 
     return dependency
 
+
+# NOTE: Those below are not fully implemented permissions checkers.
+# For this case it seems an overkill to implement them.
+# If anyone needs them, you can connect it to existing codebase and utilities.
+# Related tables are now commented out, so you can use them as a reference.
 
 # async def _resolve_permissions(
 #     user: User,
