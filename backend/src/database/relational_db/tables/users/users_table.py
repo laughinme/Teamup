@@ -61,6 +61,7 @@ class User(TimestampMixin, Base):
         "OrgMembership",
         back_populates="user",
         lazy="selectin",
+        # foreign_keys=[OrgMembership.user_id],
     )
     
     @property
