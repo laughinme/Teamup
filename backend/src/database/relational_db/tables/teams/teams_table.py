@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey, Uuid, String, Text, Index, Integer, and_, CheckConstraint
@@ -6,8 +7,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from domain.teams import TeamStatus, TeamVisibility
 
+from .team_memberships import TeamMembership
 from ..table_base import Base
 from ..mixins import TimestampMixin
+
+if TYPE_CHECKING:
+    from ..users.users_table import User
 
 
 class Team(TimestampMixin, Base):
@@ -48,4 +53,21 @@ class Team(TimestampMixin, Base):
         ),
     )
     
-    created_by: Mapped["User"] = relationship(back_populates="teams", lazy="selectin")  # pyright: ignore
+    created_by: Mapped["User"] = relationship(
+        "User",
+        lazy="selectin",
+        foreign_keys=[created_by_user_id],
+    )  # pyright: ignore
+    team_memberships: Mapped[list["TeamMembership"]] = relationship(
+        back_populates="team",
+        lazy="selectin",
+        foreign_keys=[TeamMembership.team_id],
+    )  # pyright: ignore
+    members: Mapped[list["User"]] = relationship(   # pyright: ignore
+        "User",
+        secondary="team_memberships",
+        back_populates="team",
+        lazy="selectin",
+        uselist=True,
+        foreign_keys="[TeamMembership.team_id, TeamMembership.user_id]",
+    )

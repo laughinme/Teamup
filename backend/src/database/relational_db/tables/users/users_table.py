@@ -1,11 +1,16 @@
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 from datetime import datetime
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey, Uuid, String, Boolean, DateTime, Text, Index, Integer
-from sqlalchemy.dialects.postgresql import ENUM
+
+from domain.teams import TeamRole
 
 from ..table_base import Base
 from ..mixins import TimestampMixin
+
+if TYPE_CHECKING:
+    from ..teams import TeamMembership, Team
 
 
 class User(TimestampMixin, Base):
@@ -49,20 +54,30 @@ class User(TimestampMixin, Base):
         ),
     )
     
-    organization: Mapped["Organization"] = relationship(back_populates="owner", lazy="selectin") # type: ignore
-    garage: Mapped[list["GarageVehicle"]] = relationship(back_populates="user", lazy="selectin") # type: ignore
     roles: Mapped[list["Role"]] = relationship(  # pyright: ignore
         "Role",
         secondary="user_roles",
         back_populates="users",
         lazy="selectin",
     )
-    org_memberships: Mapped[list["OrgMembership"]] = relationship( # type: ignore
-        "OrgMembership",
-        back_populates="user",
+    team: Mapped["Team"] = relationship(
+        secondary="team_memberships",
+        back_populates="members",
+        uselist=False,
         lazy="selectin",
-        # foreign_keys=[OrgMembership.user_id],
+        foreign_keys="[TeamMembership.user_id, TeamMembership.team_id]",
     )
+    team_membership: Mapped["TeamMembership"] = relationship( # type: ignore
+        "TeamMembership",
+        back_populates="user",
+        uselist=False,
+        lazy="selectin",
+        foreign_keys="[TeamMembership.user_id]",
+    )
+    
+    @property
+    def team_role(self) -> TeamRole | None:
+        return self.team_membership.role if self.team_membership else None
     
     @property
     def role_slugs(self) -> list[str]:
@@ -73,7 +88,6 @@ class User(TimestampMixin, Base):
             return True
         owned = set(self.role_slugs)
         return all(slug in owned for slug in slugs)
-
 
     def bump_auth_version(self) -> None:
         self.auth_version = (self.auth_version or 0) + 1
