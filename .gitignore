@@ -181,7 +181,9 @@ cython_debug/
 .cursorindexingignore
 
 # Custom
-secrets/
+*.pem
+*.key
+*.crt
 *.DS_Store
 /backend/src/media
 test.py
@@ -190,3 +192,4 @@ test.py
 # Allow tracked frontend shared utilities
 !frontend/src/shared/lib/
 !frontend/src/shared/lib/**
+backend/.env.deploy
