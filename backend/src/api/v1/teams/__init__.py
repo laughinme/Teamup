@@ -1,3 +1,11 @@
+from fastapi import APIRouter
+
+from .routes import router as teams_router
+
+
+def get_teams_router() -> APIRouter:
+    return teams_router
+
 from fastapi import APIRouter, Depends
 
 from core.security import require

@@ -6,9 +6,12 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from domain.teams import TeamStatus, TeamVisibility
+from domain.common import Direction
 
 from .team_memberships import TeamMembership
-from ..team_requests import TeamInvite, TeamApplication
+from .team_needs import TeamNeed
+from .team_invites import TeamInvite
+from .team_applications import TeamApplication
 from ..table_base import Base
 from ..mixins import TimestampMixin
 
@@ -23,6 +26,7 @@ class Team(TimestampMixin, Base):
     
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    direction: Mapped[Direction | None] = mapped_column(ENUM(Direction), nullable=True)
     
     max_members: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
     current_members: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
@@ -49,6 +53,7 @@ class Team(TimestampMixin, Base):
             'max_members >= current_members AND max_members > 0 AND max_members <= 5',
             name='max_members_check'
         ),
+        Index('teams_direction_idx', 'direction'),
     )
     
     created_by: Mapped["User"] = relationship(  # pyright: ignore
@@ -82,4 +87,10 @@ class Team(TimestampMixin, Base):
         back_populates="team",
         lazy="selectin",
         foreign_keys=[TeamApplication.team_id],
+    )
+    needs: Mapped[list[TeamNeed]] = relationship(
+        "TeamNeed",
+        back_populates="team",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )

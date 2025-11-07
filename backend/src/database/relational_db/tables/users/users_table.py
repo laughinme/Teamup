@@ -11,6 +11,8 @@ from ..mixins import TimestampMixin
 
 if TYPE_CHECKING:
     from ..teams import TeamMembership, Team
+    from ..profiles import Profile
+    from ..notifications import Notification
 
 
 class User(TimestampMixin, Base):
@@ -59,6 +61,18 @@ class User(TimestampMixin, Base):
         secondary="user_roles",
         back_populates="users",
         lazy="selectin",
+    )
+    profile: Mapped["Profile | None"] = relationship(
+        "Profile",
+        back_populates="user",
+        lazy="selectin",
+        uselist=False,
+    )
+    notifications: Mapped[list["Notification"]] = relationship(
+        "Notification",
+        back_populates="user",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )
     team: Mapped["Team"] = relationship(
         secondary="team_memberships",

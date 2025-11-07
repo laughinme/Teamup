@@ -5,7 +5,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey, Uuid, func, DateTime, Index, text
 from sqlalchemy.dialects.postgresql import ENUM
 
-from domain.teams import TeamRole, TeamMembershipOrigin
+from domain.teams import TeamRole, TeamMembershipOrigin, TeamMemberStatus
 
 from ..table_base import Base
 from ..mixins import TimestampMixin
@@ -25,9 +25,13 @@ class TeamMembership(TimestampMixin, Base):
     origin: Mapped[TeamMembershipOrigin] = mapped_column(
         ENUM(TeamMembershipOrigin), nullable=False, default=TeamMembershipOrigin.APPLICATION
     )
+    status: Mapped[TeamMemberStatus] = mapped_column(
+        ENUM(TeamMemberStatus), nullable=False, default=TeamMemberStatus.ACCEPTED
+    )
     joined_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), server_default=func.now()
     )
+    left_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     source_invite_id: Mapped[UUID | None] = mapped_column(
         Uuid(as_uuid=True),
         ForeignKey("team_invites.id", ondelete="SET NULL"),
