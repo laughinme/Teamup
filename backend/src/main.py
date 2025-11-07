@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 from fastapi_limiter import FastAPILimiter
 from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
@@ -8,6 +8,7 @@ from api import get_api_routers
 from webhooks import get_webhooks
 from core.config import Settings, configure_logging
 from database.redis import get_redis
+from database.relational_db import wait_for_db
 # from scheduler import init_scheduler
 
 
@@ -18,6 +19,7 @@ configure_logging()
 async def lifespan(app: FastAPI):
     redis = get_redis()
     try:
+        await wait_for_db()
         await FastAPILimiter.init(redis)
         yield
     finally:
@@ -26,8 +28,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title='Hackathon',
-    debug=True
+    title='TeamUp',
+    debug=config.DEBUG_MODE,
+    description='TeamUp is a platform for creating and managing teams',
 )
 
 # Mount static

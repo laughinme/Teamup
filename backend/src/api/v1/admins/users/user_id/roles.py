@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 
 from core.security import require
 from database.relational_db import User
-from domain.auth.enums import SystemPermission
 from domain.users import UserModel, UserRolesUpdate
 from service.users import UserService, get_user_service
 
