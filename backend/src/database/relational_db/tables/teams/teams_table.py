@@ -8,11 +8,9 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from domain.teams import TeamStatus, TeamVisibility
 
 from .team_memberships import TeamMembership
+from ..team_requests import TeamInvite, TeamApplication
 from ..table_base import Base
 from ..mixins import TimestampMixin
-
-if TYPE_CHECKING:
-    from ..users.users_table import User
 
 
 class Team(TimestampMixin, Base):
@@ -53,16 +51,17 @@ class Team(TimestampMixin, Base):
         ),
     )
     
-    created_by: Mapped["User"] = relationship(
+    created_by: Mapped["User"] = relationship(  # pyright: ignore
         "User",
         lazy="selectin",
         foreign_keys=[created_by_user_id],
-    )  # pyright: ignore
+    )
     team_memberships: Mapped[list["TeamMembership"]] = relationship(
         back_populates="team",
         lazy="selectin",
         foreign_keys=[TeamMembership.team_id],
-    )  # pyright: ignore
+        # overlaps="team,members",
+    )
     members: Mapped[list["User"]] = relationship(   # pyright: ignore
         "User",
         secondary="team_memberships",
@@ -70,4 +69,17 @@ class Team(TimestampMixin, Base):
         lazy="selectin",
         uselist=True,
         foreign_keys="[TeamMembership.team_id, TeamMembership.user_id]",
+        # overlaps="team_memberships,team_membership,user,team",
+    )
+    invites: Mapped[list["TeamInvite"]] = relationship(  # pyright: ignore
+        "TeamInvite",
+        back_populates="team",
+        lazy="selectin",
+        foreign_keys=[TeamInvite.team_id],
+    )
+    applications: Mapped[list["TeamApplication"]] = relationship(  # pyright: ignore
+        "TeamApplication",
+        back_populates="team",
+        lazy="selectin",
+        foreign_keys=[TeamApplication.team_id],
     )

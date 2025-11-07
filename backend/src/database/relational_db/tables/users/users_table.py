@@ -66,6 +66,7 @@ class User(TimestampMixin, Base):
         uselist=False,
         lazy="selectin",
         foreign_keys="[TeamMembership.user_id, TeamMembership.team_id]",
+        # overlaps="team_membership,user,team_memberships,members,team",
     )
     team_membership: Mapped["TeamMembership"] = relationship( # type: ignore
         "TeamMembership",
@@ -73,6 +74,7 @@ class User(TimestampMixin, Base):
         uselist=False,
         lazy="selectin",
         foreign_keys="[TeamMembership.user_id]",
+        # overlaps="team",
     )
     
     @property
