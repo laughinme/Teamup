@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends
 
 from core.security import require
 
-
 def get_teams_router() -> APIRouter:
-    from .create import router as create_team_router
+    from .create import router as create_router
+    from .catalog import router as catalog_router
+    from .team_id import get_team_id_router
     
     router = APIRouter(
         prefix='/teams',
@@ -16,6 +17,8 @@ def get_teams_router() -> APIRouter:
         }
     )
     
-    router.include_router(create_team_router)
+    router.include_router(create_router)
+    router.include_router(catalog_router)
+    router.include_router(get_team_id_router())
     
     return router

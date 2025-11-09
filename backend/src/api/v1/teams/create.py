@@ -9,13 +9,15 @@ from service.teams import TeamService, get_team_service
 router = APIRouter()
 
 @router.post(
-    path='/',
+    "/",
     response_model=TeamModel,
-    summary='Create a new team'
+    status_code=201,
+    summary="Create a new team",
 )
 async def create_team(
     payload: TeamCreate,
     user: Annotated[User, Depends(auth_user)],
-    svc: Annotated[TeamService, Depends(get_team_service)],
+    service: Annotated[TeamService, Depends(get_team_service)],
 ):
-    return await svc.create_team(payload, user)
+    team = await service.create_team(owner_id=user.id, payload=payload)
+    return team
