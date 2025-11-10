@@ -10,13 +10,20 @@ class TeamMembershipOrigin(str, Enum):
 class TeamInviteStatus(str, Enum):
     PENDING = "pending"
     ACCEPTED = "accepted"
-    DECLINED = "declined"
+    REJECTED = "rejected"
     EXPIRED = "expired"
-    CANCELED = "canceled"
 
 
 class TeamApplicationStatus(str, Enum):
     PENDING = "pending"
-    APPROVED = "approved"
+    ACCEPTED = "accepted"
     REJECTED = "rejected"
-    CANCELED = "canceled"
+    WITHDRAWN = "withdrawn"
+
+
+class TeamMemberStatus(str, Enum):
+    INVITED = "invited"
+    APPLIED = "applied"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+    LEFT = "left"

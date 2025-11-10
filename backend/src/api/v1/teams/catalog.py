@@ -1,14 +1,9 @@
 from typing import Annotated
-from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 
-from core.security import auth_user
-from database.relational_db import User
-from domain.teams import (
-    TeamListResponse,
-    TeamModel,
-)
+from domain.teams import TeamModel
+from domain.common import CursorPage
 from service.teams import TeamService, get_team_service
 
 
@@ -16,7 +11,7 @@ router = APIRouter()
 
 @router.get(
     "/",
-    response_model=TeamListResponse,
+    response_model=CursorPage[TeamModel],
     summary="Team catalog",
 )
 async def list_teams(
@@ -26,4 +21,4 @@ async def list_teams(
 ):
     teams = await service.list_teams(limit=limit, offset=offset)
     items = [TeamModel.model_validate(team) for team in teams]
-    return TeamListResponse(items=items, next_cursor=None)
+    return CursorPage[TeamModel](items=items, next_cursor=None)

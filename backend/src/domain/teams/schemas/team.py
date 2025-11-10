@@ -71,13 +71,8 @@ class TeamCreate(BaseModel):
 class TeamUpdate(BaseModel):
     name: str | None = Field(None, max_length=128)
     description: str | None = Field(None, max_length=2000)
-    direction: Direction | None = Field(None)
+    # direction: Direction | None = Field(None)
     status: TeamStatus | None = Field(None)
     visibility: TeamVisibility | None = Field(None)
     max_members: Annotated[int | None, Field(ge=3, le=5)] = None
     needs: list[TeamNeedInput] | None = Field(None)
-
-
-class TeamListResponse(BaseModel):
-    items: list[TeamModel] = Field(default_factory=list)
-    next_cursor: str | None = Field(None)
