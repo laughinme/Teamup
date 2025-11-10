@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from core.security import auth_user, require
 from database.relational_db import User
@@ -20,8 +20,10 @@ router = APIRouter(prefix="/feed", tags=["feed"])
 )
 async def feed_for_you(
     user: Annotated[User, Depends(auth_user)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    cursor: Annotated[str | None, Query(description='Opaque cursor')] = None,
     # service: Annotated[FeedService, Depends(get_feed_service)],
 ):
-    # items = await service.get_for_user(user.id)
+    # items = await svc.get_for_user(user.id, limit=limit, cursor=cursor)
     # return CursorPage[FeedItem](items=items, next_cursor=None)
     raise NotImplementedHTTPError()
