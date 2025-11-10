@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from core.security import auth_user
 from database.relational_db import User
@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/applications",
+    "/",
     response_model=ApplicationModel,
     status_code=status.HTTP_201_CREATED,
     summary="Appeal to join a team",
