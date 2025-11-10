@@ -20,3 +20,8 @@ class ApplicationCreate(BaseModel):
 
 class ApplicationActionPayload(BaseModel):
     note: str | None = Field(None, max_length=2000)
+
+
+class ApplicationStatusUpdate(BaseModel):
+    status: TeamApplicationStatus = Field(..., description="New application status")
+    note: str | None = Field(None, max_length=2000, description="Optional moderator/applicant note")

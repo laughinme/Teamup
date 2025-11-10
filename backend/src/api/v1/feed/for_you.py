@@ -10,7 +10,7 @@ from domain.errors import NotImplementedHTTPError
 # from service.matching import FeedService, get_feed_service
 
 
-router = APIRouter(prefix="/feed", tags=["feed"])
+router = APIRouter()
 
 
 @router.get(

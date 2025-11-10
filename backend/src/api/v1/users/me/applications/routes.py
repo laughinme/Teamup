@@ -1,12 +1,13 @@
 from uuid import UUID
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException, status
 
 from core.security import auth_user
 from database.relational_db import User
-from domain.applications import ApplicationModel
+from domain.applications import ApplicationModel, ApplicationStatusUpdate
 from domain.common import CursorPage
+from domain.teams import TeamApplicationStatus
 from domain.errors import NotImplementedHTTPError
 # from service.applications import ApplicationService, get_application_service
 
@@ -29,20 +30,21 @@ async def list_my_applications(
     # return CursorPage(items=items, next_cursor=None)
     raise NotImplementedHTTPError()
 
-@router.post(
-    "/{application_id}/withdraw",
+@router.patch(
+    "/{application_id}",
     response_model=ApplicationModel,
-    summary="Withdraw application",
+    summary="Update user's application status (withdraw)",
+    description="User can only withdraw their own application through this endpoint."
+                "Expected payload.status == WITHDRAWN, otherwise 400 Bad Request will be raised."
+                "Team admin can accept/reject applications through /teams/{team_id}/applications/{application_id} endpoint.",
 )
-async def withdraw_application(
+async def update_my_application_status(
     application_id: UUID,
+    payload: ApplicationStatusUpdate,
     user: Annotated[User, Depends(auth_user)],
     # service: Annotated[ApplicationService, Depends(get_application_service)],
 ):
-    # return await _change_application_status(
-    #     application_id,
-    #     TeamApplicationStatus.WITHDRAWN,
-    #     service,
-    #     user,
-    # )
+    if payload.status != TeamApplicationStatus.WITHDRAWN:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Expected status: WITHDRAWN")
+    # TODO: Implement withdrawal logic in service layer.
     raise NotImplementedHTTPError()
