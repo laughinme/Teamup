@@ -27,3 +27,8 @@ class InviteCreate(BaseModel):
 
 class InviteActionPayload(BaseModel):
     note: str | None = Field(None, max_length=2000)
+
+
+class InviteStatusUpdate(BaseModel):
+    status: TeamInviteStatus = Field(..., description="New invite status")
+    note: str | None = Field(None, max_length=2000, description="Optional note/reason")

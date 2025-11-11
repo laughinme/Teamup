@@ -9,7 +9,6 @@ def get_teams_router() -> APIRouter:
     
     router = APIRouter(
         prefix='/teams',
-        tags=['Teams'],
         dependencies=[Depends(require("member"))],
         responses={
             401: {"description": "Not authorized"},
@@ -17,8 +16,8 @@ def get_teams_router() -> APIRouter:
         }
     )
     
-    router.include_router(create_router)
-    router.include_router(catalog_router)
+    router.include_router(create_router, tags=['Teams'])
+    router.include_router(catalog_router, tags=['Teams'])
     router.include_router(get_team_id_router())
     
     return router

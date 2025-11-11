@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from core.security import auth_user
 from database.relational_db import User
-from domain.invites import InviteCreate, InviteModel
+from domain.invites import InviteCreate, InviteModel, InviteStatusUpdate
 from domain.teams import TeamInviteStatus
 from domain.common import CursorPage
 from domain.errors import NotImplementedHTTPError
@@ -30,37 +30,20 @@ async def list_invites_sent_to_me(
     raise NotImplementedHTTPError()
 
 
-@router.post(
-    "/{invite_id}/accept",
+@router.patch(
+    "/{invite_id}",
     response_model=InviteModel,
-    summary="Accept invite",
+    summary="Update my invite status (accept/reject)",
+    description="Recipient user can accept or reject the invite. "
+                "Expected payload.status is ACCEPTED or REJECTED.",
 )
-async def accept_invite(
+async def update_my_invite_status(
     invite_id: UUID,
+    payload: InviteStatusUpdate,
     user: Annotated[User, Depends(auth_user)],
     # svc: Annotated[InviteService, Depends(get_invite_service)],
 ):
-    # return await svc.update_status(
-    #     invite_id,
-    #     TeamInviteStatus.ACCEPTED,
-    #     user,
-    # )
-    raise NotImplementedHTTPError()
-
-
-@router.post(
-    "/{invite_id}/reject",
-    response_model=InviteModel,
-    summary="Reject invite",
-)
-async def reject_invite(
-    invite_id: UUID,
-    user: Annotated[User, Depends(auth_user)],
-    # svc: Annotated[InviteService, Depends(get_invite_service)],
-):
-    # return await svc.update_status(
-    #     invite_id,
-    #     TeamInviteStatus.REJECTED,
-    #     user,
-    # )
+    if payload.status not in [TeamInviteStatus.ACCEPTED, TeamInviteStatus.REJECTED]:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Expected status: ACCEPTED or REJECTED")
+    # return await svc.update_status(invite_id, payload.status, user, note=payload.note)
     raise NotImplementedHTTPError()

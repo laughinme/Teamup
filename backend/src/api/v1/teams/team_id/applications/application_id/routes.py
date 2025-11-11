@@ -18,6 +18,9 @@ router = APIRouter()
     "/",
     response_model=ApplicationModel,
     summary="Update team application status (accept/reject)",
+    description="Team admins can accept/reject applications through this endpoint."
+                "Expected payload.status is ACCEPTED or REJECTED, otherwise 400 Bad Request will be raised."
+                "User can withdraw their own application only through /users/me/applications/{application_id} endpoint.",
 )
 async def update_application_status(
     application_id: UUID,

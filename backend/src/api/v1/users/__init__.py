@@ -6,7 +6,7 @@ def get_users_router() -> APIRouter:
     
     router = APIRouter(
         prefix='/users',
-        tags=['Users'],
+        # tags=['Users'],
         responses={401: {"description": "Not authorized"}}
     )
 
