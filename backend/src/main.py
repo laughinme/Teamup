@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
 
 from api import get_api_routers
+from api.errors import setup_error_handlers
 from webhooks import get_webhooks
 from core.config import Settings, configure_logging
 from database.redis import get_redis
@@ -35,6 +36,9 @@ app = FastAPI(
 
 # Mount static
 # app.mount('/media', StaticFiles(directory=config.MEDIA_DIR, check_dir=False), 'media')
+
+# Setup error handlers
+setup_error_handlers(app)
 
 # Including routers
 app.include_router(get_api_routers())
