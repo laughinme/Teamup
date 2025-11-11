@@ -14,7 +14,8 @@ config = Settings() # pyright: ignore[reportCallIssue]
 @router.put(
     path='/picture',
     response_model=UserModel,
-    summary='Update user profile picture'
+    summary='Update user profile picture',
+    deprecated=True
 )
 async def update_profile(
     file: Annotated[UploadFile, File(..., description=f"JPEG or PNG files (max {config.MAX_PHOTO_SIZE} MB)")],
