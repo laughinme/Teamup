@@ -7,3 +7,4 @@ from .membership import (
     TeamApplicationStatus,
     TeamMemberStatus,
 )
+from .needs import NeedRequirementType
