@@ -1,7 +1,7 @@
 from uuid import UUID, uuid4
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Integer, Text, Uuid
+from sqlalchemy import ForeignKey, Integer, Text, Uuid, and_
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -29,14 +29,11 @@ class TeamNeedTag(TimestampMixin, Base):
     )
     need: Mapped["TeamNeed"] = relationship(
         "TeamNeed",
-        back_populates="tags",
         lazy="selectin",
-        # foreign_keys=[need_id],
     )
     tag: Mapped["TechTag"] = relationship(
         "TechTag",
         lazy="selectin",
-        # foreign_keys=[tag_id],
     )
 
 
@@ -61,13 +58,19 @@ class TeamNeed(TimestampMixin, Base):
     )
     must_tags: Mapped[list["TeamNeedTag"]] = relationship(
         "TeamNeedTag",
+        primaryjoin=lambda: and_(
+            TeamNeed.id == TeamNeedTag.need_id,
+            TeamNeedTag.requirement_type == NeedRequirementType.MUST,
+        ),
         back_populates="need",
         lazy="selectin",
-        # foreign_keys=[TeamNeedTag.need_id],
     )
     nice_tags: Mapped[list["TeamNeedTag"]] = relationship(
         "TeamNeedTag",
+        primaryjoin=lambda: and_(
+            TeamNeed.id == TeamNeedTag.need_id,
+            TeamNeedTag.requirement_type == NeedRequirementType.NICE,
+        ),
         back_populates="need",
         lazy="selectin",
-        # foreign_keys=[TeamNeedTag.need_id],
     )

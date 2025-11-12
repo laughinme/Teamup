@@ -25,8 +25,6 @@ class User(TimestampMixin, Base):
     
     # Profile info
     username: Mapped[str | None] = mapped_column(String, nullable=True)
-    profile_pic_url: Mapped[str | None] = mapped_column(String, nullable=True)
-    bio: Mapped[str | None] = mapped_column(String, nullable=True)
     language_code: Mapped[str | None] = mapped_column(
         String(2), ForeignKey('languages.code'), nullable=True
     )
@@ -60,13 +58,24 @@ class User(TimestampMixin, Base):
         back_populates="users",
         lazy="selectin",
     )
+    # profile: Mapped["Profile | None"] = relationship(
+    #     "Profile",
+    #     back_populates="user",
+    #     lazy="selectin",
+    #     uselist=False,
+    # )
+    # notifications: Mapped[list["Notification"]] = relationship(
+    #     "Notification",
+    #     back_populates="user",
+    #     lazy="selectin",
+    #     cascade="all, delete-orphan",
+    # )
     team: Mapped["Team"] = relationship(
         secondary="team_memberships",
         back_populates="members",
         uselist=False,
         lazy="selectin",
         foreign_keys="[TeamMembership.user_id, TeamMembership.team_id]",
-        # overlaps="team_membership,user,team_memberships,members,team",
     )
     team_membership: Mapped["TeamMembership"] = relationship( # type: ignore
         "TeamMembership",
@@ -74,7 +83,6 @@ class User(TimestampMixin, Base):
         uselist=False,
         lazy="selectin",
         foreign_keys="[TeamMembership.user_id]",
-        # overlaps="team",
     )
     
     @property
