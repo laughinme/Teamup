@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import hmac
 import logging
 from datetime import UTC, datetime, timedelta
@@ -39,6 +37,11 @@ class TokenService:
         jti = payload["jti"]
         if await self.repo.exists(f"block:{jti}"):
             logger.info("Failed to verify JWT: this token is blocked")
+            return None
+        
+        src = payload["src"]
+        if src not in ["web", "mobile"]:
+            logger.info("Failed to verify JWT: invalid source")
             return None
 
         return payload
@@ -103,7 +106,7 @@ class TokenService:
         await self.repo.set(f"block:{jti}", "1", ttl)
 
         user_id = payload["sub"]
-        user = await self.user_repo.get_by_id(user_id)
+        user = await self.user_repo.get_by_id(str(user_id))
         if user is None:
             logger.info("Failed to refresh JWT: user %s not found", user_id)
             return None
