@@ -1,37 +1,18 @@
 import { AppSidebar } from "@/shared/components/app-sidebar"
 import { ChartAreaInteractive } from "@/shared/components/chart-area-interactive"
-import { DataTable } from "@/shared/components/data-table"
 import { SectionCards } from "@/shared/components/section-cards"
-import { SiteHeader } from "@/shared/components/site-header"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/shared/components/ui/sidebar"
+import { SidebarProvider } from "@/shared/components/ui/sidebar"
 
 export default function Page() {
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-            </div>
-          </div>
+    <SidebarProvider className="flex-col bg-muted/10">
+      <AppSidebar />
+      <main className="flex flex-1 flex-col">
+        <div className="@container/main mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">
+          <SectionCards />
+          <ChartAreaInteractive />
         </div>
-      </SidebarInset>
+      </main>
     </SidebarProvider>
   )
 }
