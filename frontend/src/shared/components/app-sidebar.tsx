@@ -1,18 +1,20 @@
 import { IconInnerShadowTop } from "@tabler/icons-react"
 import { Link, NavLink } from "react-router-dom"
 
+import { useAuth } from "@/app/providers/auth/useAuth"
 import { NavUser } from "@/shared/components/nav-user"
 import { cn } from "@/shared/lib/utils"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-}
-
 export function AppSidebar() {
+  const auth = useAuth()
+  const hasUser = Boolean(auth?.user)
+
+  const fallbackUser = {
+    name: auth?.user?.email ?? "TeamUp Member",
+    email: auth?.user?.email ?? "member@teamup.app",
+    avatar: "/avatars/shadcn.jpg",
+  }
+
   return (
     <header className="supports-[backdrop-filter]:bg-background/80 border-b bg-background/95 px-4 py-3 shadow-sm backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-3">
@@ -38,7 +40,16 @@ export function AppSidebar() {
           </NavLink>
         </nav>
         <div className="ml-auto flex items-center">
-          <NavUser user={data.user} />
+          {hasUser ? (
+            <NavUser user={fallbackUser} />
+          ) : (
+            <Link
+              to="/auth"
+              className="inline-flex items-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition hover:bg-primary/90"
+            >
+              Войти
+            </Link>
+          )}
         </div>
       </div>
     </header>

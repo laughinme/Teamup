@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { useAuth } from "@/app/providers/auth/useAuth";
 import type { AuthCredentials } from "@/entities/auth/model";
@@ -38,6 +39,7 @@ export default function AuthPage(): ReactElement {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const auth = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -85,6 +87,7 @@ export default function AuthPage(): ReactElement {
       } else {
         await register(credentials);
       }
+      navigate("/fyp", { replace: true });
     } catch (err) {
       console.error("Ошибка аутентификации:", err);
     }
