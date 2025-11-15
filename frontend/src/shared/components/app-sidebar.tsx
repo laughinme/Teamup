@@ -9,9 +9,20 @@ export function AppSidebar() {
   const auth = useAuth()
   const hasUser = Boolean(auth?.user)
 
+  const resolvedAuth = auth?.user as { name?: unknown; username?: unknown; email?: unknown } | null
+  const authEmail =
+    resolvedAuth && typeof resolvedAuth.email === "string" && resolvedAuth.email.trim().length
+      ? resolvedAuth.email.trim()
+      : null
+  const authName =
+    resolvedAuth && typeof resolvedAuth.name === "string" && resolvedAuth.name.trim().length
+      ? resolvedAuth.name.trim()
+      : resolvedAuth && typeof resolvedAuth.username === "string" && resolvedAuth.username.trim().length
+        ? resolvedAuth.username.trim()
+        : null
   const fallbackUser = {
-    name: auth?.user?.email ?? "TeamUp Member",
-    email: auth?.user?.email ?? "member@teamup.app",
+    name: authName ?? authEmail ?? "TeamUp Member",
+    email: authEmail ?? "member@teamup.app",
     avatar: "/avatars/shadcn.jpg",
   }
 

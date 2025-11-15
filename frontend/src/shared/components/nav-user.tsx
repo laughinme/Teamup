@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 
 import {
   IconCreditCard,
@@ -39,12 +40,21 @@ export function NavUser({
   }
 }) {
   const auth = useAuth()
-  const displayEmail = auth?.user?.email ?? user.email
-  const authUserName =
-    auth?.user && typeof (auth.user as { name?: unknown }).name === "string"
-      ? (auth.user as { name: string }).name
-      : undefined
-  const displayName = authUserName ?? displayEmail ?? user.name
+  const navigate = useNavigate()
+
+  const resolvedAuth = auth?.user as { name?: unknown; username?: unknown; email?: unknown } | null
+  const resolvedEmail =
+    resolvedAuth && typeof resolvedAuth.email === "string" && resolvedAuth.email.trim().length
+      ? resolvedAuth.email.trim()
+      : user.email
+  const displayEmail = resolvedEmail ?? user.email
+  const rawName =
+    resolvedAuth && typeof resolvedAuth.name === "string" && resolvedAuth.name.trim().length
+      ? resolvedAuth.name.trim()
+      : resolvedAuth && typeof resolvedAuth.username === "string" && resolvedAuth.username.trim().length
+        ? resolvedAuth.username.trim()
+        : undefined
+  const displayName = rawName ?? user.name ?? displayEmail
 
   const handleLogout = useCallback(() => {
     if (!auth) {
@@ -54,7 +64,8 @@ export function NavUser({
 
     auth.dismissCsrfWarning()
     auth.logout()
-  }, [auth])
+    navigate("/auth", { replace: true })
+  }, [auth, navigate])
 
   return (
     <SidebarMenu>

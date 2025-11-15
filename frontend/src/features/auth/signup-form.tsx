@@ -21,8 +21,10 @@ import { cn } from "@/shared/lib/utils"
 type SignupFormProps = Omit<ComponentProps<"div">, "onSubmit"> & {
   email: string
   password: string
+  username: string
   onEmailChange: (value: string) => void
   onPasswordChange: (value: string) => void
+  onUsernameChange: (value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>
   submitLabel: string
   disabled?: boolean
@@ -35,8 +37,10 @@ export function SignupForm({
   className,
   email,
   password,
+  username,
   onEmailChange,
   onPasswordChange,
+  onUsernameChange,
   onSubmit,
   submitLabel,
   disabled = false,
@@ -78,6 +82,25 @@ export function SignupForm({
                   autoComplete="email"
                   value={email}
                   onChange={(event) => onEmailChange(event.target.value)}
+                  disabled={disabled}
+                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
+                />
+              </Field>
+              <Field>
+                <FieldLabel
+                  htmlFor="username"
+                  className="text-sm font-medium text-neutral-200"
+                >
+                  Username
+                </FieldLabel>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="teamplayer"
+                  required
+                  autoComplete="username"
+                  value={username}
+                  onChange={(event) => onUsernameChange(event.target.value)}
                   disabled={disabled}
                   className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />

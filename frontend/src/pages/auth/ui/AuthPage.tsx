@@ -36,6 +36,7 @@ export default function AuthPage(): ReactElement {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const auth = useAuth();
@@ -70,7 +71,14 @@ export default function AuthPage(): ReactElement {
   const isLoading = isLoggingIn || isRegistering;
   const error = mode === "login" ? loginError : registerError;
   const errorMessage = error ? getErrorMessage(error) : null;
-  const canSubmit = Boolean(email.trim() && password.trim() && !isLoading);
+  const trimmedEmail = email.trim();
+  const trimmedUsername = username.trim();
+  const canSubmit = Boolean(
+    trimmedEmail &&
+      password.trim() &&
+      (mode === "login" ? true : trimmedUsername) &&
+      !isLoading
+  );
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -79,7 +87,10 @@ export default function AuthPage(): ReactElement {
       return;
     }
 
-    const credentials: AuthCredentials = { email: email.trim(), password };
+    const credentials: AuthCredentials = { email: trimmedEmail, password };
+    if (mode === "register") {
+      credentials.username = trimmedUsername;
+    }
 
     try {
       if (mode === "login") {
@@ -162,8 +173,10 @@ export default function AuthPage(): ReactElement {
               <SignupForm
                 email={email}
                 password={password}
+                username={username}
                 onEmailChange={setEmail}
                 onPasswordChange={setPassword}
+                onUsernameChange={setUsername}
                 onSubmit={submit}
                 submitLabel={isLoading ? "Загрузка..." : "Create Account"}
                 disabled={isLoading}
