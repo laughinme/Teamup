@@ -20,7 +20,7 @@ export default defineConfig({
     https: {},
     proxy: {
       "/api/v1": {
-        target: "https://teamup-prod.fly.dev",
+        target: "http://127.0.0.1:4010",
         changeOrigin: true,
         secure: true,
         followRedirects: true
