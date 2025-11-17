@@ -47,7 +47,7 @@ async def update_profile(
 @router.get(
     "/profile",
     response_model=ProfileModel,
-    summary="Get my profile",
+    summary="Get my profile. (not implemented yet)",
 )
 async def get_my_profile(
     user: Annotated[User, Depends(auth_user)],
@@ -63,7 +63,7 @@ async def get_my_profile(
 @router.patch(
     "/profile",
     response_model=ProfileModel,
-    summary="Update my profile",
+    summary="Update my profile. (not implemented yet)",
 )
 async def update_my_profile(
     payload: ProfileUpdate,
@@ -81,7 +81,7 @@ async def update_my_profile(
 @router.put(
     "/profile/tech-stack",
     response_model=ProfileModel,
-    summary="Update my tech stack",
+    summary="Update my tech stack. (not implemented yet)",
 )
 async def update_tech_stack(
     payload: ProfileTechUpdate,

@@ -17,7 +17,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=CursorPage[ApplicationModel],
-    summary="My applications",
+    summary="My applications. (not implemented yet)",
 )
 async def list_my_applications(
     user: Annotated[User, Depends(auth_user)],
@@ -33,7 +33,7 @@ async def list_my_applications(
 @router.patch(
     "/{application_id}",
     response_model=ApplicationModel,
-    summary="Update user's application status (withdraw)",
+    summary="Update user's application status (withdraw). (not implemented yet)",
     description="User can only withdraw their own application through this endpoint."
                 "Expected payload.status == WITHDRAWN, otherwise 400 Bad Request will be raised."
                 "Team admin can accept/reject applications through /teams/{team_id}/applications/{application_id} endpoint.",

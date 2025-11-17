@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get(
     "/for-you",
     response_model=CursorPage[FeedItem],
-    summary="Personal recommendations",
+    summary="Personal recommendations. (not implemented yet)",
 )
 async def feed_for_you(
     user: Annotated[User, Depends(auth_user)],

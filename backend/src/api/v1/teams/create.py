@@ -13,7 +13,7 @@ router = APIRouter()
     "/",
     response_model=TeamModel,
     status_code=201,
-    summary="Create a new team",
+    summary="Create a new team. (not implemented yet)",
 )
 async def create_team(
     payload: TeamCreate,

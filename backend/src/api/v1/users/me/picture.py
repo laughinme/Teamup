@@ -14,7 +14,7 @@ config = Settings() # pyright: ignore[reportCallIssue]
 @router.put(
     path='/picture',
     response_model=UserModel,
-    summary='Update user profile picture',
+    summary='Update user profile picture. (not implemented yet)',
     deprecated=True
 )
 async def update_profile(

@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=TeamModel,
-    summary="Get team details",
+    summary="Get team details. (not implemented yet)",
 )
 async def get_team(
     team_id: UUID,
@@ -35,7 +35,7 @@ async def get_team(
 @router.put(
     "/",
     response_model=TeamModel,
-    summary="Update team",
+    summary="Update team. (not implemented yet)",
 )
 async def update_team(
     team_id: UUID,
@@ -56,7 +56,7 @@ async def update_team(
 @router.post(
     "/needs",
     response_model=TeamModel,
-    summary="Add team need",
+    summary="Add team need. (not implemented yet)",
 )
 async def add_team_need(
     team_id: UUID,

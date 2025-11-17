@@ -17,7 +17,7 @@ router = APIRouter()
 @router.patch(
     "/",
     response_model=ApplicationModel,
-    summary="Update team application status (accept/reject)",
+    summary="Update team application status (accept/reject). (not implemented yet)",
     description="Team admins can accept/reject applications through this endpoint."
                 "Expected payload.status is ACCEPTED or REJECTED, otherwise 400 Bad Request will be raised."
                 "User can withdraw their own application only through /users/me/applications/{application_id} endpoint.",

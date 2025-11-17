@@ -20,7 +20,7 @@ router = APIRouter()
     "/",
     response_model=InviteModel,
     status_code=status.HTTP_201_CREATED,
-    summary="Send invite to a user",
+    summary="Send invite to a user. (not implemented yet)",
 )
 async def send_invite(
     team_id: UUID,
@@ -48,7 +48,7 @@ async def send_invite(
 @router.get(
     "/",
     response_model=CursorPage[InviteModel],
-    summary="List invites",
+    summary="List invites. (not implemented yet)",
 )
 async def list_invites(
     user: Annotated[User, Depends(auth_user)],
