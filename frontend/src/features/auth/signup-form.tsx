@@ -51,15 +51,15 @@ export function SignupForm({
 }: SignupFormProps) {
   return (
     <div
-      className={cn("flex flex-col gap-6 text-neutral-200", className)}
+      className={cn("flex flex-col gap-6 text-foreground", className)}
       {...props}
     >
-      <Card className="bg-neutral-900 border-neutral-800 shadow-none">
+      <Card className="border-white/10 bg-[#0f3b31] shadow-none">
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-xl font-semibold text-white">
+          <CardTitle className="text-xl font-semibold text-foreground">
             Create your account
           </CardTitle>
-          <CardDescription className="text-sm text-neutral-400">
+          <CardDescription className="text-sm text-muted-foreground">
             Enter your details to get started
           </CardDescription>
         </CardHeader>
@@ -70,7 +70,7 @@ export function SignupForm({
               <Field>
                 <FieldLabel
                   htmlFor="email"
-                  className="text-sm font-medium text-neutral-200"
+                  className="text-sm font-medium text-foreground"
                 >
                   Email
                 </FieldLabel>
@@ -83,13 +83,12 @@ export function SignupForm({
                   value={email}
                   onChange={(event) => onEmailChange(event.target.value)}
                   disabled={disabled}
-                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />
               </Field>
               <Field>
                 <FieldLabel
                   htmlFor="username"
-                  className="text-sm font-medium text-neutral-200"
+                  className="text-sm font-medium text-foreground"
                 >
                   Username
                 </FieldLabel>
@@ -102,13 +101,12 @@ export function SignupForm({
                   value={username}
                   onChange={(event) => onUsernameChange(event.target.value)}
                   disabled={disabled}
-                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />
               </Field>
               <Field>
                 <FieldLabel
                   htmlFor="password"
-                  className="text-sm font-medium text-neutral-200"
+                  className="text-sm font-medium text-foreground"
                 >
                   Password
                 </FieldLabel>
@@ -120,9 +118,8 @@ export function SignupForm({
                   value={password}
                   onChange={(event) => onPasswordChange(event.target.value)}
                   disabled={disabled}
-                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />
-                <FieldDescription className="text-neutral-500">
+                <FieldDescription className="text-muted-foreground">
                   Must be at least 8 characters long.
                 </FieldDescription>
               </Field>
@@ -130,16 +127,16 @@ export function SignupForm({
                 <Button
                   type="submit"
                   disabled={submitDisabled || disabled}
-                  className="bg-white text-neutral-900 hover:bg-neutral-200 disabled:bg-neutral-700 disabled:text-neutral-400"
+                  className="h-11 w-full rounded-full"
                 >
                   {submitLabel}
                 </Button>
-                <FieldDescription className="text-center text-sm text-neutral-400">
+                <FieldDescription className="text-center text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <button
                     type="button"
                     onClick={onSwitchToLogin}
-                    className="underline-offset-4 hover:underline text-white"
+                    className="text-primary underline-offset-4 hover:underline"
                   >
                     Sign in
                   </button>
@@ -149,13 +146,13 @@ export function SignupForm({
           </form>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center text-sm text-neutral-500">
+      <FieldDescription className="px-6 text-center text-sm text-muted-foreground">
         By clicking continue, you agree to our{" "}
-        <a className="text-neutral-300" href="#">
+        <a className="text-foreground" href="#">
           Terms of Service
         </a>{" "}
         and{" "}
-        <a className="text-neutral-300" href="#">
+        <a className="text-foreground" href="#">
           Privacy Policy
         </a>
         .

@@ -47,15 +47,15 @@ export function LoginForm({
 }: LoginFormProps) {
   return (
     <div
-      className={cn("flex flex-col gap-6 text-neutral-200", className)}
+      className={cn("flex flex-col gap-6 text-foreground", className)}
       {...props}
     >
-      <Card className="bg-neutral-900 border-neutral-800 shadow-none">
+      <Card className="border-white/10 bg-[#0f3b31] shadow-none">
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-xl font-semibold text-white">
+          <CardTitle className="text-xl font-semibold text-foreground">
             Welcome back
           </CardTitle>
-          <CardDescription className="text-sm text-neutral-400">
+          <CardDescription className="text-sm text-muted-foreground">
             Sign in with your email and password
           </CardDescription>
         </CardHeader>
@@ -66,7 +66,7 @@ export function LoginForm({
               <Field>
                 <FieldLabel
                   htmlFor="email"
-                  className="text-sm font-medium text-neutral-200"
+                  className="text-sm font-medium text-foreground"
                 >
                   Email
                 </FieldLabel>
@@ -79,13 +79,12 @@ export function LoginForm({
                   value={email}
                   onChange={(event) => onEmailChange(event.target.value)}
                   disabled={disabled}
-                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />
               </Field>
               <Field>
                 <FieldLabel
                   htmlFor="password"
-                  className="text-sm font-medium text-neutral-200"
+                  className="text-sm font-medium text-foreground"
                 >
                   Password
                 </FieldLabel>
@@ -97,23 +96,22 @@ export function LoginForm({
                   value={password}
                   onChange={(event) => onPasswordChange(event.target.value)}
                   disabled={disabled}
-                  className="bg-neutral-950 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                 />
               </Field>
               <Field>
                 <Button
                   type="submit"
                   disabled={submitDisabled || disabled}
-                  className="bg-white text-neutral-900 hover:bg-neutral-200 disabled:bg-neutral-700 disabled:text-neutral-400"
+                  className="h-11 w-full rounded-full"
                 >
                   {submitLabel}
                 </Button>
-                <FieldDescription className="text-center text-sm text-neutral-400">
+                <FieldDescription className="text-center text-sm text-muted-foreground">
                   Don&apos;t have an account?{" "}
                   <button
                     type="button"
                     onClick={onSwitchToSignup}
-                    className="underline-offset-4 hover:underline text-white"
+                    className="text-primary underline-offset-4 hover:underline"
                   >
                     Sign up
                   </button>

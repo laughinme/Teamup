@@ -1,6 +1,7 @@
 import { Navigate, useLocation, useRoutes, type Location, type RouteObject } from "react-router-dom";
 import FypPage from "@/pages/Fyp";
 import AuthPage from "@/pages/auth/ui/AuthPage";
+import UserProfilePage from "@/pages/UserProfile";
 import { useAuth } from "@/app/providers/auth/useAuth";
 
 const RedirectIfAuthenticated = () => {
@@ -35,6 +36,14 @@ export const routes: RouteObject[] = [
   {
     path: "/auth",
     element: <RedirectIfAuthenticated />
+  },
+  {
+    path: "/user-profile",
+    element: <UserProfilePage />
+  },
+  {
+    path: "/account",
+    element: <UserProfilePage />
   },
   {
     path: "*",

@@ -67,6 +67,10 @@ export function NavUser({
     navigate("/auth", { replace: true })
   }, [auth, navigate])
 
+  const handleAccountNavigate = useCallback(() => {
+    navigate("/account")
+  }, [navigate])
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -106,7 +110,7 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={handleAccountNavigate}>
                 <IconUserCircle />
                 Account
               </DropdownMenuItem>

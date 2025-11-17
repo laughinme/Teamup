@@ -9,10 +9,10 @@ function App() {
   if (!authData) {
    
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-100">
-        <div className="p-8 bg-white rounded-lg shadow-md text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">Ошибка конфигурации</h1>
-          <p className="text-slate-700">
+      <div className="min-h-screen flex items-center justify-center bg-[#023528] text-[#f4f7e9]">
+        <div className="p-8 rounded-lg border border-white/10 bg-[#0c362c] shadow-lg text-center">
+          <h1 className="text-2xl font-bold text-[#f9d64f] mb-2">Ошибка конфигурации</h1>
+          <p className="text-[#f4f7e9]">
             Контекст аутентификации не найден. Убедитесь, что ваше приложение обернуто в <code>&lt;AuthProvider&gt;</code>.
           </p>
         </div>
@@ -29,16 +29,16 @@ function App() {
 
   if (isRestoringSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-lg text-slate-500">Загрузка сессии...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#023528]">
+        <p className="text-lg text-[#f4f7e9]">Загрузка сессии...</p>
       </div>
     );
   }
 
   if (isUserLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-lg text-slate-500">Загрузка пользователя...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#023528]">
+        <p className="text-lg text-[#f4f7e9]">Загрузка пользователя...</p>
       </div>
     );
   }
@@ -63,13 +63,13 @@ const CsrfWarningBanner = ({
   }
 
   return (
-    <div className="bg-amber-50 border-b border-amber-200 text-amber-800">
+    <div className="bg-[#0f3b31] border-b border-white/10 text-[#f4f7e9]">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <span className="text-sm sm:text-base">{message}</span>
         <button
           type="button"
           onClick={onDismiss}
-          className="rounded-md border border-amber-300 bg-white px-3 py-1 text-xs font-medium text-amber-700 transition hover:bg-amber-100"
+          className="rounded-md border border-white/20 bg-transparent px-3 py-1 text-xs font-medium text-[#f9d64f] transition hover:bg-white/10"
         >
           Скрыть
         </button>
@@ -79,10 +79,10 @@ const CsrfWarningBanner = ({
 };
 
 const styles = `
-.input { @apply px-3 py-2 border rounded-2xl outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-500 transition; }
+.input { @apply px-3 py-2 border rounded-2xl outline-none bg-transparent text-foreground border-white/20 focus:ring-2 focus:ring-[#65c79a] focus:border-[#65c79a] transition placeholder:text-muted-foreground; }
 .btn { @apply inline-flex items-center justify-center px-3 py-2 rounded-2xl border text-sm font-medium transition active:translate-y-[1px]; }
-.btn.primary { @apply border-sky-700 bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20; }
-.btn.secondary { @apply border-slate-300 bg-white hover:bg-slate-50; }
+.btn.primary { @apply border-[#d7b63f] bg-[#f9d64f] text-[#1b210f] hover:bg-[#ffe26b] shadow-md shadow-[#f9d64f]/30; }
+.btn.secondary { @apply border-white/30 text-foreground bg-transparent hover:bg-white/10; }
 
 /* Анимации для страницы аутентификации */
 @keyframes blob {
