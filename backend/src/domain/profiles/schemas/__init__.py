@@ -7,4 +7,5 @@ from .profile import (
     ProfileUpdate,
     ProfileFilters,
     # MeProfileResponse,
+    ProfileTechUpdate
 )

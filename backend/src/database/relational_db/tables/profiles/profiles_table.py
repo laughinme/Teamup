@@ -35,7 +35,7 @@ class Profile(TimestampMixin, Base):
     )
     bio: Mapped[str | None] = mapped_column(Text, nullable=True)
     achievements: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, default=list)
-    timezone: Mapped[str] = mapped_column(String(64), nullable=False)
+    timezone: Mapped[str] = mapped_column(String(64), nullable=True)
     visibility: Mapped[ProfileVisibility] = mapped_column(
         ENUM(ProfileVisibility), nullable=False, default=ProfileVisibility.PUBLIC, index=True
     )

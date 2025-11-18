@@ -40,7 +40,7 @@ class ProfileModel(TimestampModel):
     # languages_spoken: list[str] = Field(default_factory=list)
     # preferred_language_codes: list[str] = Field(default_factory=list)
     # time_commitment: TimeCommitment = Field(...)
-    timezone: str = Field(...)
+    timezone: str | None = Field(None)
     # preferred_roles: list[str] = Field(default_factory=list)
     visibility: ProfileVisibility = Field(default=ProfileVisibility.PUBLIC)
     tech_stack: list[ProfileTechLink] = Field(default_factory=list)
