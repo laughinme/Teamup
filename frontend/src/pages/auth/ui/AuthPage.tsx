@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { useAuth } from "@/app/providers/auth/useAuth";
 import type { AuthCredentials } from "@/entities/auth/model";
@@ -35,9 +36,11 @@ export default function AuthPage(): ReactElement {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const auth = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -45,9 +48,9 @@ export default function AuthPage(): ReactElement {
 
   if (!auth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-50 text-slate-700">
-        <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-lg">
-          <h2 className="text-2xl font-semibold text-red-500">Контекст аутентификации не найден</h2>
+      <div className="min-h-screen flex items-center justify-center bg-[#023528] text-[#f4f7e9]">
+        <div className="rounded-2xl border border-white/10 bg-[#0c362c] p-6 shadow-lg">
+          <h2 className="text-2xl font-semibold text-[#f9d64f]">Контекст аутентификации не найден</h2>
           <p className="mt-2">Убедитесь, что используете компонент внутри `AuthProvider`.</p>
         </div>
       </div>
@@ -68,7 +71,14 @@ export default function AuthPage(): ReactElement {
   const isLoading = isLoggingIn || isRegistering;
   const error = mode === "login" ? loginError : registerError;
   const errorMessage = error ? getErrorMessage(error) : null;
-  const canSubmit = Boolean(email.trim() && password.trim() && !isLoading);
+  const trimmedEmail = email.trim();
+  const trimmedUsername = username.trim();
+  const canSubmit = Boolean(
+    trimmedEmail &&
+      password.trim() &&
+      (mode === "login" ? true : trimmedUsername) &&
+      !isLoading
+  );
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,7 +87,10 @@ export default function AuthPage(): ReactElement {
       return;
     }
 
-    const credentials: AuthCredentials = { email: email.trim(), password };
+    const credentials: AuthCredentials = { email: trimmedEmail, password };
+    if (mode === "register") {
+      credentials.username = trimmedUsername;
+    }
 
     try {
       if (mode === "login") {
@@ -85,21 +98,22 @@ export default function AuthPage(): ReactElement {
       } else {
         await register(credentials);
       }
+      navigate("/fyp", { replace: true });
     } catch (err) {
       console.error("Ошибка аутентификации:", err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-4 py-12 text-white overflow-hidden">
+    <div className="min-h-screen bg-[#023528] flex items-center justify-center px-4 py-12 text-[#f4f7e9] overflow-hidden">
       <motion.div
         className="absolute inset-0 pointer-events-none"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.35 }}
+        animate={{ opacity: 0.25 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <motion.div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_rgba(0,0,0,0))]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.06),_rgba(2,53,40,0))]"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
@@ -113,13 +127,13 @@ export default function AuthPage(): ReactElement {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         {csrfWarning ? (
-          <div className="mb-6 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 backdrop-blur">
+          <div className="mb-6 rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-sm text-[#f9d64f] backdrop-blur">
             <div className="flex items-start justify-between gap-3">
               <span>{csrfWarning}</span>
               <button
                 type="button"
                 onClick={dismissCsrfWarning}
-                className="text-amber-200 underline-offset-4 hover:underline"
+                className="text-[#f9d64f] underline-offset-4 hover:underline"
               >
                 Понятно
               </button>
@@ -159,8 +173,10 @@ export default function AuthPage(): ReactElement {
               <SignupForm
                 email={email}
                 password={password}
+                username={username}
                 onEmailChange={setEmail}
                 onPasswordChange={setPassword}
+                onUsernameChange={setUsername}
                 onSubmit={submit}
                 submitLabel={isLoading ? "Загрузка..." : "Create Account"}
                 disabled={isLoading}

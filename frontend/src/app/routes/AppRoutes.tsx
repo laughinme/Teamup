@@ -1,22 +1,8 @@
-import { Navigate, Outlet, useLocation, useRoutes, type Location, type RouteObject } from "react-router-dom";
-import DashboardPage from "@/pages/Dashboard";
+import { Navigate, useLocation, useRoutes, type Location, type RouteObject } from "react-router-dom";
+import FypPage from "@/pages/Fyp";
 import AuthPage from "@/pages/auth/ui/AuthPage";
+import UserProfilePage from "@/pages/UserProfile";
 import { useAuth } from "@/app/providers/auth/useAuth";
-
-const RequireAuth = () => {
-  const auth = useAuth();
-  const location = useLocation();
-
-  if (!auth) {
-    throw new Error("Auth context is unavailable. Wrap routes with <AuthProvider>.");
-  }
-
-  if (!auth.user) {
-    return <Navigate to="/auth" replace state={{ from: location }} />;
-  }
-
-  return <Outlet />;
-};
 
 const RedirectIfAuthenticated = () => {
   const auth = useAuth();
@@ -30,7 +16,7 @@ const RedirectIfAuthenticated = () => {
     const state = location.state as { from?: Location } | undefined;
     const from = state?.from;
     const targetPath =
-      from && from.pathname && from.pathname !== "/auth" ? from.pathname : "/dashboard";
+      from && from.pathname && from.pathname !== "/auth" ? from.pathname : "/fyp";
 
     return <Navigate to={targetPath} replace />;
   }
@@ -41,19 +27,27 @@ const RedirectIfAuthenticated = () => {
 export const routes: RouteObject[] = [
   {
     path: "/",
-    element: <RequireAuth />,
-    children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: "dashboard", element: <DashboardPage /> }
-    ]
+    element: <FypPage />
+  },
+  {
+    path: "/fyp",
+    element: <FypPage />
   },
   {
     path: "/auth",
     element: <RedirectIfAuthenticated />
   },
   {
+    path: "/user-profile",
+    element: <UserProfilePage />
+  },
+  {
+    path: "/account",
+    element: <UserProfilePage />
+  },
+  {
     path: "*",
-    element: <Navigate to="/dashboard" replace />
+    element: <Navigate to="/" replace />
   }
 ];
 

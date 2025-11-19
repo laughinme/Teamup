@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=CursorPage[TeamModel],
-    summary="Team catalog",
+    summary="Team catalog. (not implemented yet)",
 )
 async def list_teams(
     # service: Annotated[TeamService, Depends(get_team_service)],

@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=CursorPage[InviteModel],
-    summary="List invites sent to me",
+    summary="List invites sent to me. (not implemented yet)",
 )
 async def list_invites_sent_to_me(
     user: Annotated[User, Depends(auth_user)],
@@ -33,7 +33,7 @@ async def list_invites_sent_to_me(
 @router.patch(
     "/{invite_id}",
     response_model=InviteModel,
-    summary="Update my invite status (accept/reject)",
+    summary="Update my invite status (accept/reject). (not implemented yet)",
     description="Recipient user can accept or reject the invite. "
                 "Expected payload.status is ACCEPTED or REJECTED.",
 )

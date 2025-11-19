@@ -43,6 +43,11 @@ class TeamMembership(TimestampMixin, Base):
     added_by_user_id: Mapped[UUID | None] = mapped_column(
         Uuid(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
     )
+    
+    # status: Mapped[TeamMemberStatus] = mapped_column(
+    #     ENUM(TeamMemberStatus), nullable=False, default=TeamMemberStatus.ACCEPTED
+    # )
+    # left_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     __table_args__ = (
         Index(

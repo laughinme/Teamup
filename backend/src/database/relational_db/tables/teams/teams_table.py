@@ -1,13 +1,14 @@
-from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey, Uuid, String, Text, Index, Integer, and_, CheckConstraint
-from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.dialects.postgresql import ENUM, ARRAY
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from domain.teams import TeamStatus, TeamVisibility
+# from domain.common import Direction
 
 from .team_memberships import TeamMembership
+from .team_needs import TeamNeed
 from ..team_requests import TeamInvite, TeamApplication
 from ..table_base import Base
 from ..mixins import TimestampMixin
@@ -23,6 +24,8 @@ class Team(TimestampMixin, Base):
     
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    
+    # directions: Mapped[list[Direction]] = mapped_column(ARRAY(ENUM(Direction)), nullable=False, default=list)
     
     max_members: Mapped[int] = mapped_column(Integer, nullable=False, default=5)
     current_members: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
@@ -49,6 +52,7 @@ class Team(TimestampMixin, Base):
             'max_members >= current_members AND max_members > 0 AND max_members <= 5',
             name='max_members_check'
         ),
+        # Index('teams_direction_idx', 'direction'),
     )
     
     created_by: Mapped["User"] = relationship(  # pyright: ignore
@@ -69,7 +73,6 @@ class Team(TimestampMixin, Base):
         lazy="selectin",
         uselist=True,
         foreign_keys="[TeamMembership.team_id, TeamMembership.user_id]",
-        # overlaps="team_memberships,team_membership,user,team",
     )
     invites: Mapped[list["TeamInvite"]] = relationship(  # pyright: ignore
         "TeamInvite",
@@ -82,4 +85,10 @@ class Team(TimestampMixin, Base):
         back_populates="team",
         lazy="selectin",
         foreign_keys=[TeamApplication.team_id],
+    )
+    needs: Mapped[list[TeamNeed]] = relationship(
+        "TeamNeed",
+        back_populates="team",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )

@@ -18,7 +18,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=CursorPage[ProfileSummary],
-    summary="List profiles",
+    summary="List profiles. (not implemented yet)",
 )
 async def list_profiles(
     # service: Annotated[ProfileService, Depends(get_profile_service)],
@@ -34,7 +34,7 @@ async def list_profiles(
 @router.get(
     "/{profile_id}",
     response_model=ProfileModel,
-    summary="Get profile by id",
+    summary="Get profile by id. (not implemented yet)",
 )
 async def get_profile(
     profile_id: UUID = Path(..., description="Profile ID"),

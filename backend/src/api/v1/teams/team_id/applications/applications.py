@@ -19,7 +19,7 @@ router = APIRouter()
     "/",
     response_model=ApplicationModel,
     status_code=status.HTTP_201_CREATED,
-    summary="Appeal to join a team",
+    summary="Appeal to join a team. (not implemented yet)",
 )
 async def create_application(
     team_id: UUID,

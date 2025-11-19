@@ -10,22 +10,27 @@ from domain.teams import (
     TeamRole,
     TeamStatus,
     TeamVisibility,
+    NeedRequirementType,
 )
 from domain.common import TimestampModel
+from .tech_tags import TechTagModel
 
+
+class TeamNeedTagModel(BaseModel):
+    id: UUID = Field(...)
+    tag: TechTagModel = Field(...)
+    requirement_type: NeedRequirementType = Field(...)
 
 class TeamNeedModel(BaseModel):
     id: UUID = Field(...)
     direction: Direction = Field(...)
     required_level: ExperienceLevel = Field(...)
-    must_tag_ids: list[UUID] = Field(default_factory=list)
-    nice_tag_ids: list[UUID] = Field(default_factory=list)
+    must_tags: list[TeamNeedTagModel] = Field(default_factory=list)
+    nice_tags: list[TeamNeedTagModel] = Field(default_factory=list)
     slots: int = Field(..., ge=1)
     notes: str | None = Field(None)
 
-
 class TeamNeedInput(BaseModel):
-    id: UUID | None = Field(None)
     direction: Direction = Field(...)
     required_level: ExperienceLevel = Field(...)
     must_tag_ids: list[UUID] = Field(default_factory=list)
@@ -33,6 +38,8 @@ class TeamNeedInput(BaseModel):
     slots: int = Field(..., ge=1)
     notes: str | None = Field(None)
 
+# class TeamNeedUpdate(BaseModel):
+    
 
 class TeamMemberModel(BaseModel):
     user_id: UUID = Field(...)

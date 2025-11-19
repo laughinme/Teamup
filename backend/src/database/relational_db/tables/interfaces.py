@@ -2,7 +2,6 @@ from typing import TypeVar, Generic
 
 from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import DeclarativeMeta
 
 from .table_base import Base
 
@@ -20,7 +19,7 @@ class BaseInterface(Generic[T, PKType]):
     """
 
     def __init__(self, model: type[T], session: AsyncSession):
-        if not isinstance(model, DeclarativeMeta):
+        if not hasattr(model, "__table__"):
             raise TypeError("model must inherit from SQLAlchemy declarative base")
 
         self.model = model

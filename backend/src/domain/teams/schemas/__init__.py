@@ -6,3 +6,4 @@ from .team import (
     TeamNeedInput,
     TeamMemberModel,
 )
+from .tech_tags import TechTagModel

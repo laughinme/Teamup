@@ -7,6 +7,7 @@ from domain.profiles import (
     ProfileModel,
     ProfileSummary,
     ProfileUpdate,
+    ProfileTechUpdate,
     # MeProfileResponse
 )
 from core.security import auth_user
@@ -46,7 +47,7 @@ async def update_profile(
 @router.get(
     "/profile",
     response_model=ProfileModel,
-    summary="Get my profile",
+    summary="Get my profile. (not implemented yet)",
 )
 async def get_my_profile(
     user: Annotated[User, Depends(auth_user)],
@@ -59,13 +60,31 @@ async def get_my_profile(
     raise NotImplementedHTTPError()
 
 
-@router.put(
+@router.patch(
     "/profile",
     response_model=ProfileModel,
-    summary="Update my profile",
+    summary="Update my profile. (not implemented yet)",
 )
 async def update_my_profile(
     payload: ProfileUpdate,
+    user: Annotated[User, Depends(auth_user)],
+    # service: Annotated[ProfileService, Depends(get_profile_service)],
+):
+    # try:
+    #     profile = await service.upsert_profile(user.id, payload)
+    # except ValueError as exc:
+    #     raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    # return ProfileModel.model_validate(profile)
+    raise NotImplementedHTTPError()
+
+
+@router.put(
+    "/profile/tech-stack",
+    response_model=ProfileModel,
+    summary="Update my tech stack. (not implemented yet)",
+)
+async def update_tech_stack(
+    payload: ProfileTechUpdate,
     user: Annotated[User, Depends(auth_user)],
     # service: Annotated[ProfileService, Depends(get_profile_service)],
 ):
