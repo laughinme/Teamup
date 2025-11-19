@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from database.relational_db import (
     RolesInterface,
     UserInterface,
+    ProfilesInterface,
     User,
     UoW,
 )
@@ -22,11 +23,13 @@ class CredentialsService:
         self,
         uow: UoW,
         user_repo: UserInterface,
+        profile_repo: ProfilesInterface,
         role_repo: RolesInterface,
         token_service: TokenService,
     ):
         self.uow = uow
         self.user_repo = user_repo
+        self.profile_repo = profile_repo
         self.role_repo = role_repo
         self.token_service = token_service
         
@@ -63,17 +66,19 @@ class CredentialsService:
         
         try:
             await self.user_repo.add(user)
-
-            default_role = await self.role_repo.get_by_slug(DEFAULT_ROLE.value)
-            if default_role is None:
-                raise RuntimeError("Default role is missing from the database")
-
-            await self.user_repo.assign_roles(user, [default_role])
-        
             await self.uow.session.flush()
         except IntegrityError as e:
             raise AlreadyExists()
+        
+        
+        default_role = await self.role_repo.get_by_slug(DEFAULT_ROLE.value)
+        if default_role is None:
+            raise RuntimeError("Default role is missing from the database")
 
+        await self.user_repo.assign_roles(user, [default_role])
+        
+        await self.profile_repo.initialize_default_profile(user.id)
+        
         access, refresh, csrf = await self.token_service.issue_tokens(user, src)
         return access, refresh, csrf
     

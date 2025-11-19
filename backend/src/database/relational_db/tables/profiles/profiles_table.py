@@ -18,7 +18,7 @@ from ..table_base import Base
 
 if TYPE_CHECKING:
     from ..users import User
-    from .tech_tags_table import ProfileTechTag
+    from .profile_tech_tags import ProfileTechTag
 
 
 class Profile(TimestampMixin, Base):

@@ -1,10 +1,11 @@
 from typing import Annotated
-from fastapi import Depends, Request
+from fastapi import Depends
 
 from database.relational_db import (
     RolesInterface,
     UoW,
     UserInterface,
+    ProfilesInterface,
     get_uow,
 )
 from .credentials_service import CredentialsService
@@ -17,10 +18,12 @@ async def get_credentials_service(
 ) -> CredentialsService:
     user_repo = UserInterface(uow.session)
     role_repo = RolesInterface(uow.session)
+    profile_repo = ProfilesInterface(uow.session)
 
     return CredentialsService(
         uow,
         user_repo,
+        profile_repo,
         role_repo,
         token_service,
     )
