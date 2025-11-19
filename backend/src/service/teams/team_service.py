@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import delete, select
@@ -22,6 +23,7 @@ from domain.teams import (
     TeamUpdate,
     TeamStatus,
 )
+from domain.errors import BadRequestHTTPError
 
 
 class TeamService:
@@ -125,14 +127,30 @@ class TeamService:
         query: str = "",
         limit: int = 20,
         cursor: str | None = None,
-    ) -> list[TechTag]:
-        stmt = (
-            select(TechTag)
-            .where(TechTag.name.ilike(f"%{query}%"))
-            .limit(limit)
-            .offset(cursor)
-            # if cursor is not None
-            # else select(TechTag).where(TechTag.name.ilike(f"%{query}%")).limit(limit)
+    ) -> tuple[list[TechTag], str | None]:
+        cursor_created_at = None
+        cursor_id = None
+        if cursor:
+            try:
+                ts_str, id_str = cursor.split("_", 1)
+                cursor_created_at = datetime.fromisoformat(ts_str)
+                cursor_id = UUID(id_str)
+            except Exception:
+                raise BadRequestHTTPError(detail='Invalid cursor')
+
+        tech_tags = await self.tech_tags.list_tech_tags(
+            query=query,
+            limit=limit,
+            cursor_created_at=cursor_created_at,
+            cursor_id=cursor_id,
         )
-        result = await self.uow.session.scalars(stmt)
-        return list(result.unique().all())
+
+        next_cursor = None
+        if len(tech_tags) == limit:
+            last = tech_tags[-1]
+            if last.created_at is None:
+                next_cursor = None
+            else:
+                next_cursor = f"{last.created_at.isoformat()}_{last.id}"
+
+        return tech_tags, next_cursor

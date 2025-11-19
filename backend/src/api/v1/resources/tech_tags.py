@@ -24,6 +24,6 @@ async def list_tech_tags(
     limit: Annotated[int, Query(ge=1, le=100)] = 20,    
     cursor: Annotated[str | None, Query(description='Opaque cursor')] = None,
 ):
-    tech_tags = await service.list_tech_tags(query=q, limit=limit, cursor=cursor)
+    tech_tags, next_cursor = await service.list_tech_tags(query=q, limit=limit, cursor=cursor)
     items = [TechTagModel.model_validate(tech_tag) for tech_tag in tech_tags]
-    return CursorPage[TechTagModel](items=items, cursor_info=cursor_info)
+    return CursorPage[TechTagModel](items=items, next_cursor=next_cursor)
