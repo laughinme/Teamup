@@ -13,11 +13,12 @@ from domain.teams import (
     NeedRequirementType,
 )
 from domain.common import TimestampModel
+from .tech_tags import TechTagModel
 
 
 class TeamNeedTagModel(BaseModel):
     id: UUID = Field(...)
-    tag_id: UUID = Field(...)
+    tag: TechTagModel = Field(...)
     requirement_type: NeedRequirementType = Field(...)
 
 class TeamNeedModel(BaseModel):

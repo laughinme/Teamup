@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 
-from sqlalchemy import String, Text
+from sqlalchemy import String, Text, Index
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Uuid
@@ -19,3 +19,19 @@ class TechTag(TimestampMixin, Base):
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     kind: Mapped[TechTagKind] = mapped_column(ENUM(TechTagKind), nullable=False, index=True)
+
+    __table_args__ = (
+        # GIN trigram indices for fast text search
+        Index(
+            "tech_tags_slug_trgm",
+            "slug",
+            postgresql_using="gin",
+            postgresql_ops={"slug": "gin_trgm_ops"},
+        ),
+        Index(
+            "tech_tags_name_trgm",
+            "name",
+            postgresql_using="gin",
+            postgresql_ops={"name": "gin_trgm_ops"},
+        ),
+    )

@@ -6,6 +6,7 @@ from database.relational_db import (
     TeamMembershipsInterface,
     TeamNeedsInterface,
     TeamsInterface,
+    TechTagsInterface,
     UoW,
     get_uow,
 )
@@ -19,8 +20,7 @@ async def get_team_service(
     teams = TeamsInterface(uow.session)
     needs = TeamNeedsInterface(uow.session)
     memberships = TeamMembershipsInterface(uow.session)
+    tech_tags = TechTagsInterface(uow.session)
     # applications = TeamApplicationsInterface(uow.session)
     # invites = TeamInvitesInterface(uow.session)
-    return TeamService(uow, teams, needs, memberships)
-
-
+    return TeamService(uow, teams, needs, memberships, tech_tags)

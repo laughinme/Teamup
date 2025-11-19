@@ -12,6 +12,8 @@ from database.relational_db import (
     TeamsInterface,
     UoW,
     TeamNeedTag,
+    TechTag,
+    TechTagsInterface,
 )
 from domain.teams import (
     NeedRequirementType,
@@ -29,6 +31,7 @@ class TeamService:
         teams: TeamsInterface,
         needs: TeamNeedsInterface,
         memberships: TeamMembershipsInterface,
+        tech_tags: TechTagsInterface,
         # applications: TeamApplicationsInterface,
         # invites: TeamInvitesInterface,
     ) -> None:
@@ -37,6 +40,7 @@ class TeamService:
         self.teams = teams
         self.needs = needs
         self.memberships = memberships
+        self.tech_tags = tech_tags
         # self.applications = applications
         # self.invites = invites
 
@@ -113,3 +117,22 @@ class TeamService:
             
             
         # await self.uow.session.flush()
+
+
+    async def list_tech_tags(
+        self,
+        *,
+        query: str = "",
+        limit: int = 20,
+        cursor: str | None = None,
+    ) -> list[TechTag]:
+        stmt = (
+            select(TechTag)
+            .where(TechTag.name.ilike(f"%{query}%"))
+            .limit(limit)
+            .offset(cursor)
+            # if cursor is not None
+            # else select(TechTag).where(TechTag.name.ilike(f"%{query}%")).limit(limit)
+        )
+        result = await self.uow.session.scalars(stmt)
+        return list(result.unique().all())

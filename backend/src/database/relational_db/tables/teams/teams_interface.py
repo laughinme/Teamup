@@ -1,6 +1,8 @@
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, tuple_
+
+from domain.common import CursorInfo
 
 from .teams_table import Team
 from .team_memberships import TeamMembership
@@ -30,3 +32,27 @@ class TeamNeedsInterface(BaseInterface[TeamNeed, UUID]):
 class TechTagsInterface(BaseInterface[TechTag, UUID]):
     def __init__(self, session: AsyncSession):
         super().__init__(TechTag, session)
+        
+        
+    async def list_tech_tags(
+        self, 
+        *,
+        query: str = "",
+        limit: int = 20,
+        cursor_data: CursorInfo,
+    ) -> list[TechTag]:
+        stmt = (
+            select(TechTag)
+            .limit(limit)
+            .where(
+                TechTag.name.ilike(f"%{query}%"),
+                TechTag.slug.ilike(f"%{query}%"),
+            )
+        )
+        
+        cursor_data.keys = [TechTag.id]
+        if cur := cursor_data.keys:
+            stmt = stmt.where(() < tuple_(*cur))
+        
+        result = await self.session.scalars(stmt)
+        return list(result.all())
