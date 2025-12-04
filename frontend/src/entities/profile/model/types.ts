@@ -19,3 +19,8 @@ export type TechStack = {
     };
     level: number;
 };
+
+export type ProfileListResponse = {
+    items: ProfileResponse[];
+    nextCursor: string | null;
+}

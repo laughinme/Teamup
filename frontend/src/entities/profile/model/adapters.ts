@@ -1,5 +1,7 @@
 import type {ProfileResponseDto} from '@/shared/api/profile';
 import type {ProfileResponse} from './types';
+import type {ProfileListDto} from '@/shared/api/profile';
+import type {ProfileListResponse} from './types';
 
 export type TechStack = {
     tag:{
@@ -20,4 +22,9 @@ export const toProfileResponse = (dto: ProfileResponseDto): ProfileResponse => (
     timezone: dto.timezone,
     visibility: dto.visibility,
     techStack: dto.tech_stack,
+});
+
+export const toProfileListResponse = (dto: ProfileListDto): ProfileListResponse => ({
+    items: dto.items.map(toProfileResponse),
+    nextCursor: dto.next_cursor,
 });

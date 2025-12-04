@@ -4,7 +4,6 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import path from "path"
 
-const STRIPE_PUBLISHABLE_KEY = "pk_test_51RxrAwPtCxyTWU2nOrPPJQU6pbhCKsox9yXMJfl9sE3BRuLDISQVpFgGtkqNAkJHhFyUvpzG6IYKUFZjKWawOTyx00nla8B24Y";
 
 export default defineConfig({
   plugins: [tailwindcss(), react(), basicSsl()],
@@ -13,9 +12,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    "import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY": JSON.stringify(STRIPE_PUBLISHABLE_KEY)
-  },
+
+  
   server: {
     https: {},
     proxy: {

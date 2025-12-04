@@ -21,7 +21,17 @@ export type TechStackDto = {
     level: number;
 };
 
-export const getProfile = async (): Promise<ProfileResponseDto> => {
-    const response = await apiProtected.get('/users/me/profile');
+export const getProfile = async () => {
+    const response = await apiProtected.get<ProfileResponseDto>('/users/me/profile');
+    return response.data;
+}
+
+export type ProfileListDto = {
+    items: ProfileResponseDto[];
+    next_cursor: string | null;
+}
+
+export const getProfilesList = async (cursor: string | null, limit: number) => {
+    const response = await apiProtected.get<ProfileListDto>('/profiles', { params: { cursor, limit } });
     return response.data;
 }
